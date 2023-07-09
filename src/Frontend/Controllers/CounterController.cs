@@ -34,4 +34,14 @@ public class CounterController: ControllerBase
         var grain = _client.GetGrain<ICounterGrain>(id);
         await grain.Decrement();
     }
+
+    [HttpPost("load")]
+    public async Task Load()
+    {
+        await Parallel.ForEachAsync(Enumerable.Range(1, 300_000), async (i, cancellation) =>
+            {
+                await Increment(i.ToString());
+            }
+        );
+    }
 }
