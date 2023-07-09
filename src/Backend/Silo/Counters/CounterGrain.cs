@@ -14,6 +14,11 @@ public class CounterGrain : Grain, ICounterGrain
 
     public ValueTask Decrement()
     {
+        if (_value == 0)
+        {
+            throw new Exception("Counter cannot be negative");
+        }
+
         _value--;
         return ValueTask.CompletedTask;
     }

@@ -1,3 +1,4 @@
+using Orleans.Providers.MongoDB.Configuration;
 using Shared.Config;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,15 +26,22 @@ builder.Services.AddSwaggerGen();
 builder.Host.UseOrleans(siloBuilder =>
 {
     siloBuilder
+        .ConfigureEndpoints(siloPort: siloPort, gatewayPort: gatewayPort)
         .UseDashboard(options =>
         {
             options.HideTrace = true;
             options.Port = dashboardPort;
-        }).UseLocalhostClustering
-        (
-            gatewayPort: gatewayPort, 
-            siloPort: siloPort
-        )
+        })
+        .UseMongoDBClient("mongodb://localhost")
+        .UseMongoDBClustering( options =>
+        {
+            options.DatabaseName = "orleans";
+        })
+        // .UseLocalhostClustering
+        // (
+        //     gatewayPort: gatewayPort, 
+        //     siloPort: siloPort
+        // )
         .ConfigureLogging(logging => logging.AddConsole());
 }).UseConsoleLifetime();
 

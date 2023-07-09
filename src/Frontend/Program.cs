@@ -1,3 +1,4 @@
+using Orleans.Providers.MongoDB.Configuration;
 using Shared.Config;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,11 @@ builder.Services.AddSwaggerGen();
 builder.Host
     .UseOrleansClient(client =>
     {
-        client.UseLocalhostClustering(SiloEnvironment.Gateways);
+        client.UseMongoDBClient("mongodb://localhost");
+        client.UseMongoDBClustering(o=>
+        {
+            o.DatabaseName = "orleans";
+        });
     })
     .ConfigureLogging(logging => logging.AddConsole())
     .UseConsoleLifetime();
