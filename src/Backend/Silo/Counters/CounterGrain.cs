@@ -6,20 +6,20 @@ public class CounterGrain : Grain, ICounterGrain
 {
     private int _value;
     
-    public Task Increment()
+    public ValueTask Increment()
     {
         _value++;
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
-    public Task Decrement()
+    public ValueTask Decrement()
     {
         _value--;
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
-    public Task<int> Read()
+    public ValueTask<int> Read()
     {
-        return Task.FromResult(_value);
+        return ValueTask.FromResult(_value);
     }
 }

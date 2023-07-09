@@ -1,3 +1,5 @@
+using Backend.Silo.Counters;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,7 +13,11 @@ builder.Services.AddSwaggerGen();
 builder.Host.UseOrleans(siloBuilder =>
 {
     siloBuilder
-        .UseLocalhostClustering()
+        .UseDashboard( options => 
+        {
+            options.HideTrace = true;
+            options.HostSelf = true;
+        })        .UseLocalhostClustering()
         .ConfigureLogging(logging => logging.AddConsole());
     
 }).UseConsoleLifetime();
@@ -28,6 +34,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.Map("/dashboard", x => x.UseOrleansDashboard());
 
 app.MapControllers();
 
