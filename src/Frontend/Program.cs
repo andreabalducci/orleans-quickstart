@@ -1,3 +1,5 @@
+using Shared.Config;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,7 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Host
     .UseOrleansClient(client =>
     {
-        client.UseLocalhostClustering();
+        client.UseLocalhostClustering(SiloEnvironment.Gateways);
     })
     .ConfigureLogging(logging => logging.AddConsole())
     .UseConsoleLifetime();

@@ -1,6 +1,18 @@
-using Backend.Silo.Counters;
+using Shared.Config;
 
 var builder = WebApplication.CreateBuilder(args);
+
+int gatewayPort = 30000;
+int siloPort = 11111;
+int dashboardPort = 8080;
+
+if (args.Length > 0)
+{
+    int delta = int.Parse(args[1]);
+    gatewayPort += delta;
+    siloPort += delta;
+    dashboardPort += delta;
+}
 
 // Add services to the container.
 
@@ -13,13 +25,16 @@ builder.Services.AddSwaggerGen();
 builder.Host.UseOrleans(siloBuilder =>
 {
     siloBuilder
-        .UseDashboard( options => 
+        .UseDashboard(options =>
         {
             options.HideTrace = true;
-            options.HostSelf = true;
-        })        .UseLocalhostClustering()
+            options.Port = dashboardPort;
+        }).UseLocalhostClustering
+        (
+            gatewayPort: gatewayPort, 
+            siloPort: siloPort
+        )
         .ConfigureLogging(logging => logging.AddConsole());
-    
 }).UseConsoleLifetime();
 
 var app = builder.Build();
@@ -34,8 +49,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
-app.Map("/dashboard", x => x.UseOrleansDashboard());
 
 app.MapControllers();
 
