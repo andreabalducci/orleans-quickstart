@@ -1,19 +1,15 @@
 using Standalone.Silo.Services;
+using Standalone.Silo.Shared;
 
 namespace Standalone.Silo.Generator;
 
-public interface IGeneratorGrain : IGrainWithStringKey
-{
-    ValueTask Generate(int seed);
-}
-
 public class GeneratorGrain : Grain, IGeneratorGrain
 {
-    private readonly IDataServiceClient _dataService;
+    private readonly ILocalDiskServiceClient _localDiskService;
 
-    public GeneratorGrain(IDataServiceClient dataService)
+    public GeneratorGrain(ILocalDiskServiceClient localDiskService)
     {
-        _dataService = dataService;
+        _localDiskService = localDiskService;
     }
 
     public async ValueTask Generate(int seed)
@@ -26,6 +22,6 @@ public class GeneratorGrain : Grain, IGeneratorGrain
             data.Add(c.ToString(), Guid.NewGuid().ToString());
         }
         
-        await _dataService.DumpToLocalDisk(data);
+        await _localDiskService.Save(data);
     }
 }

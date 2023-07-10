@@ -1,4 +1,4 @@
-namespace Standalone.Silo.Services;
+namespace Standalone.Silo.Shared;
 
 [GenerateSerializer]
 public class DataItem

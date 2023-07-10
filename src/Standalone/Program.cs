@@ -16,8 +16,8 @@ builder.Host.UseOrleans(siloBuilder=>
 
         siloBuilder.ConfigureServices(s =>
         {
-            s.AddGrainService<DataService>()
-                .AddSingleton<IDataServiceClient, DataServiceClient>();
+            s.AddGrainService<LocalDiskService>()
+                .AddSingleton<ILocalDiskServiceClient, LocalDiskServiceClient>();
         });
 
     })

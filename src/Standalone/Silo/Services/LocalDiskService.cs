@@ -1,17 +1,18 @@
-using System.Runtime.InteropServices.JavaScript;
 using Orleans.Concurrency;
 using Orleans.Runtime;
+using Standalone.Silo.Compressor;
+using Standalone.Silo.Shared;
 
 namespace Standalone.Silo.Services;
 
 [Reentrant]
-public class DataService : GrainService, IDataService
+public class LocalDiskService : GrainService, ILocalDiskService
 {
     private readonly Orleans.Runtime.Silo _silo;
     readonly IGrainFactory _grainFactory;
-    private readonly ILogger<DataService> _logger;
+    private readonly ILogger<LocalDiskService> _logger;
 
-    public DataService(
+    public LocalDiskService(
         IServiceProvider services,
         GrainId id,
         Orleans.Runtime.Silo silo,
@@ -21,7 +22,7 @@ public class DataService : GrainService, IDataService
     {
         _silo = silo;
         _grainFactory = grainFactory;
-        _logger = loggerFactory.CreateLogger<DataService>();
+        _logger = loggerFactory.CreateLogger<LocalDiskService>();
     }
 
     public override Task Init(IServiceProvider serviceProvider) =>
@@ -37,10 +38,14 @@ public class DataService : GrainService, IDataService
         await base.Stop();
     }
 
-    public async ValueTask DumpToLocalDisk(DataSet dataSet)
+    public async ValueTask Save(DataSet dataSet)
     {
-        _logger.LogInformation("Dump started");
-        await Task.Delay(1_000);
-        _logger.LogInformation("Dump completed");
+        var compressor = _grainFactory.GetGrain<ICompressorGrain>("pool1");
+        
+        _logger.LogInformation("Save started for {DataSet}", dataSet.Id);
+        await Task.Delay(10_000);
+
+        var compressed = await compressor.Compress(dataSet);
+        _logger.LogInformation("Save completed for {DataSet}", dataSet.Id);
     }
 }
