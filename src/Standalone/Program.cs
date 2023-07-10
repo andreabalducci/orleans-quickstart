@@ -1,3 +1,5 @@
+using Standalone.Silo.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,6 +13,13 @@ builder.Host.UseOrleans(siloBuilder=>
     {
         siloBuilder.UseLocalhostClustering();
         siloBuilder.UseDashboard();
+
+        siloBuilder.ConfigureServices(s =>
+        {
+            s.AddGrainService<DataService>()
+                .AddSingleton<IDataServiceClient, DataServiceClient>();
+        });
+
     })
     .ConfigureLogging(logging => logging.AddConsole())
     .UseConsoleLifetime();
