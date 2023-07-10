@@ -1,4 +1,6 @@
+using Orleans.Providers;
 using Standalone.Silo.Services;
+using Standalone.Silo.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,9 @@ builder.Host.UseOrleans(siloBuilder=>
     {
         siloBuilder.UseLocalhostClustering();
         siloBuilder.UseDashboard();
-
+        siloBuilder.AddMemoryStreams(Constants.STREAM_PROVIDER_NAME);
+        siloBuilder.AddMemoryGrainStorage(ProviderConstants.DEFAULT_PUBSUB_PROVIDER_NAME);
+        
         siloBuilder.ConfigureServices(s =>
         {
             s.AddGrainService<LocalDiskService>()
