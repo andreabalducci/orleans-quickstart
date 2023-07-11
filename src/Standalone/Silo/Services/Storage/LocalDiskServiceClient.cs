@@ -1,7 +1,7 @@
 using Orleans.Runtime.Services;
 using Standalone.Silo.Shared;
 
-namespace Standalone.Silo.Services;
+namespace Standalone.Silo.Services.Storage;
 
 public class LocalDiskServiceClient : GrainServiceClient<ILocalDiskService>, ILocalDiskServiceClient
 {

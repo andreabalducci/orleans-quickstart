@@ -1,5 +1,7 @@
 using Orleans.Providers;
 using Standalone.Silo.Services;
+using Standalone.Silo.Services.Generators;
+using Standalone.Silo.Services.Storage;
 using Standalone.Silo.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,19 +13,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Host.UseOrleans(siloBuilder=>
+builder.Host.UseOrleans(siloBuilder =>
     {
         siloBuilder.UseLocalhostClustering();
         siloBuilder.UseDashboard();
         siloBuilder.AddMemoryStreams(Constants.STREAM_PROVIDER_NAME);
         siloBuilder.AddMemoryGrainStorage(ProviderConstants.DEFAULT_PUBSUB_PROVIDER_NAME);
-        
+
         siloBuilder.ConfigureServices(s =>
         {
             s.AddGrainService<LocalDiskService>()
+                .AddGrainService<BackgroundGeneratorGrain>()
                 .AddSingleton<ILocalDiskServiceClient, LocalDiskServiceClient>();
         });
-
     })
     .ConfigureLogging(logging => logging.AddConsole())
     .UseConsoleLifetime();

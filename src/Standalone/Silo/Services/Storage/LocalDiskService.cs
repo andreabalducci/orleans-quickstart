@@ -3,7 +3,7 @@ using Orleans.Runtime;
 using Standalone.Silo.Compressor;
 using Standalone.Silo.Shared;
 
-namespace Standalone.Silo.Services;
+namespace Standalone.Silo.Services.Storage;
 
 [Reentrant]
 public class LocalDiskService : GrainService, ILocalDiskService
