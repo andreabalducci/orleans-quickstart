@@ -22,7 +22,7 @@ public class StreamController
     {
         var provider = _client.GetStreamProvider(Constants.STREAM_PROVIDER_NAME);
         
-        var streamId = StreamId.Create("RANDOMDATA", id);
+        var streamId = StreamId.Create(Constants.STREAM_NAMESPACE, id);
         var stream = provider.GetStream<string>(streamId);
         
         _logger.LogInformation("Sending {Value} to {StreamId}", value, streamId);
