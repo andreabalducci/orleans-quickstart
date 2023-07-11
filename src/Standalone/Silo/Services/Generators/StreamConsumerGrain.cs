@@ -13,9 +13,9 @@ public interface IStreamConsumerGrain : IGrainWithStringKey
 public class StreamConsumerGrain : Grain, IStreamConsumerGrain, IAsyncObserver<string>
 {
     private StreamSubscriptionHandle<string>? _subscription;
-    private readonly ILogger _logger;
+    private readonly ILogger<StreamConsumerGrain> _logger;
 
-    public StreamConsumerGrain(ILogger logger)
+    public StreamConsumerGrain(ILogger<StreamConsumerGrain> logger)
     {
         _logger = logger;
     }

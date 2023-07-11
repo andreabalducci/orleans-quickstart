@@ -18,7 +18,7 @@ public class StreamProducerGrain : Grain, IStreamProducerGrain
        
         var provider = this.GetStreamProvider(Constants.STREAM_PROVIDER_NAME);
         var streamId = StreamId.Create(Constants.STREAM_NAMESPACE, this.GetPrimaryKeyString());
-        var stream = provider.GetStream<int>(streamId);
-        await stream.OnNextAsync(DateTime.Now.Millisecond);
+        var stream = provider.GetStream<string>(streamId);
+        await stream.OnNextAsync(value);
     }
 }
